@@ -12,7 +12,7 @@ st.title("📈 Exchange Rate Forecast with XGBoost")
 # Load data from GitHub
 @st.cache_data
 def load_data():
-    url = "https://raw.githubusercontent.com/your-username/your-repo-name/main/dfmonthly_modelling.csv"
+    url = "dfmonthly_modelling.csv"
     df = pd.read_csv(url)
     df.columns = df.columns.str.strip()
     df['Date'] = pd.to_datetime(df['Date'])
