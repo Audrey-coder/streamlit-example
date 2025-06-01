@@ -98,3 +98,17 @@ ax.set_ylabel('Exchange Rate')
 ax.legend()
 
 st.pyplot(fig)
+
+# After you have predictions and y_test_actual computed:
+
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+import numpy as np
+
+rmse = np.sqrt(mean_squared_error(y_test_actual, predictions))
+mae = mean_absolute_error(y_test_actual, predictions)
+mse = mean_squared_error(y_test_actual, predictions)
+
+st.write("### Model Evaluation Metrics")
+st.write(f"Root Mean Squared Error (RMSE): {rmse:.4f}")
+st.write(f"Mean Absolute Error (MAE): {mae:.4f}")
+st.write(f"Mean Squared Error (MSE): {mse:.4f}")
