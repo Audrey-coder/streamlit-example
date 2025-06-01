@@ -15,59 +15,63 @@ import matplotlib.pyplot as plt
 # Title
 st.title("📈 Prophet Forecast with Regressors (Exchange Rate)")
 
-# File uploader
-uploaded_file = st.file_uploader("Upload Monthly Exchange Rate CSV", type=['csv'])
+# Load data from repo
+@st.cache_data
+def load_data():
+    return pd.read_csv("dfmonthly_modelling.csv")
 
-if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
+# Load dataset
+df = load_data()
 
-    st.subheader("Preview of Uploaded Data")
-    st.write(df.head())
+st.subheader("Preview of Exchange Rate Data")
+st.write(df.head())
 
-    # Select datetime and target
-    date_col = st.selectbox("Select Date Column", df.columns)
-    y_col = st.selectbox("Select Exchange Rate Column", [col for col in df.columns if col != date_col])
+# Select datetime and target column
+date_col = st.selectbox("Select Date Column", df.columns)
+y_col = st.selectbox("Select Exchange Rate Column", [col for col in df.columns if col != date_col])
 
-    # Rename for Prophet
-    df_prophet = df.rename(columns={date_col: 'ds', y_col: 'y'})
+# Rename for Prophet
+df_prophet = df.rename(columns={date_col: 'ds', y_col: 'y'})
 
+# Identify regressors
+regressor_cols = [col for col in df_prophet.columns if col not in ['ds', 'y']]
 
-    # Identify regressors
-    regressor_cols = [col for col in df_prophet.columns if col not in ['ds', 'y']]
+# Initialize Prophet model and add regressors
+model = Prophet()
+for col in regressor_cols:
+    model.add_regressor(col)
 
-    # Initialize and add regressors
-    model = Prophet()
-    for col in regressor_cols:
-        model.add_regressor(col)
+# Fit model
+model.fit(df_prophet)
 
-    # Fit model
-    model.fit(df_prophet)
+# Forecast period
+num_months = st.slider("Months to Predict", 1, 24, 12)
 
-    # Predict future
-    num_months = st.slider("Months to Predict", 1, 24, 12)
-    future = model.make_future_dataframe(periods=num_months, freq='MS')
-    df_prophet = df_prophet.sort_values('ds')
-    future = future.sort_values('ds')
+# Create future dataframe
+future = model.make_future_dataframe(periods=num_months, freq='MS')
+df_prophet = df_prophet.sort_values('ds')
+future = future.sort_values('ds')
 
-    for col in regressor_cols:
-        past_mask = future['ds'].isin(df_prophet['ds'])
-        future.loc[past_mask, col] = df_prophet.set_index('ds')[col].reindex(future.loc[past_mask, 'ds']).values
-        # Fill remaining future values with last known value
-        future[col].fillna(df_prophet[col].iloc[-1], inplace=True)
+# Copy past regressor values and fill future with last known
+for col in regressor_cols:
+    past_mask = future['ds'].isin(df_prophet['ds'])
+    future.loc[past_mask, col] = df_prophet.set_index('ds')[col].reindex(future.loc[past_mask, 'ds']).values
+    future[col].fillna(df_prophet[col].iloc[-1], inplace=True)
 
+# Forecast
+forecast = model.predict(future)
 
-    # Forecast
-    forecast = model.predict(future)
+# Output table
+st.subheader("📑 Forecasted Exchange Rate")
+st.dataframe(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail(num_months))
 
-    # Output
-    st.subheader("Forecasted Exchange Rate")
-    st.dataframe(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail(num_months))
+# Forecast Plot
+st.subheader("📊 Forecast Plot")
+fig1 = model.plot(forecast)
+st.pyplot(fig1)
 
-    # Plot
-    st.subheader("📊 Forecast Plot")
-    fig1 = model.plot(forecast)
-    st.pyplot(fig1)
+# Forecast Components
+st.subheader("🔍 Forecast Components")
+fig2 = model.plot_components(forecast)
+st.pyplot(fig2)
 
-    st.subheader("🔍 Forecast Components")
-    fig2 = model.plot_components(forecast)
-    st.pyplot(fig2)
