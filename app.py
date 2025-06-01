@@ -31,6 +31,7 @@ if uploaded_file is not None:
     # Rename for Prophet
     df_prophet = df.rename(columns={date_col: 'ds', y_col: 'y'})
 
+
     # Identify regressors
     regressor_cols = [col for col in df_prophet.columns if col not in ['ds', 'y']]
 
@@ -45,12 +46,15 @@ if uploaded_file is not None:
     # Predict future
     num_months = st.slider("Months to Predict", 1, 24, 12)
     future = model.make_future_dataframe(periods=num_months, freq='MS')
+    df_prophet = df_prophet.sort_values('ds')
+    future = future.sort_values('ds')
 
     for col in regressor_cols:
-        future[col] = None
         past_mask = future['ds'].isin(df_prophet['ds'])
         future.loc[past_mask, col] = df_prophet.set_index('ds')[col].reindex(future.loc[past_mask, 'ds']).values
+        # Fill remaining future values with last known value
         future[col].fillna(df_prophet[col].iloc[-1], inplace=True)
+
 
     # Forecast
     forecast = model.predict(future)
