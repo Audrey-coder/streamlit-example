@@ -50,4 +50,17 @@ if uploaded_file is not None:
     st.write(f"R2: {r2:.3f}")
 
     # Plot actual vs fitted
-    fig, ax = plt.
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax.plot(model_df.index, model_df['exchange_rate'], label='Actual', color='purple')
+    ax.plot(model_df.index, model_df['exchange_rate_es'], label='Exponential Smoothing', color='orange')
+    ax.set_title('Exponential Smoothing Fit to Exchange Rate')
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Exchange Rate')
+    ax.legend()
+    ax.grid(True)
+    plt.tight_layout()
+
+    st.pyplot(fig)
+
+else:
+    st.info("Please upload a CSV file to proceed.")
