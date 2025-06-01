@@ -4,4 +4,4 @@ pandas
 matplotlib
 numpy
 statsmodels
-Prophet
+prophet
