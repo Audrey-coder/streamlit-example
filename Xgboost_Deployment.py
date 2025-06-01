@@ -21,7 +21,7 @@ st.title("📈 Exchange Rate Forecast using XGBoost")
 # Load CSV directly from GitHub repo (replace with your raw GitHub URL)
 @st.cache_data
 def load_data():
-    url = "https://raw.githubusercontent.com/your-username/your-repo-name/main/dfmonthly_modelling.csv"
+    url = "dfmonthly_modelling.csv"
     df = pd.read_csv(url)
     df.columns = df.columns.str.strip()  # Clean column names
     return df
