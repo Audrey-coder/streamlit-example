@@ -49,7 +49,7 @@ if uploaded_file is not None:
     for col in regressor_cols:
         future[col] = None
         past_mask = future['ds'].isin(df_prophet['ds'])
-        future.loc[past_mask, col] = df_prophet.set_index('ds').loc[future.loc[past_mask, 'ds'], col].values
+        future.loc[past_mask, col] = df_prophet.set_index('ds')[col].reindex(future.loc[past_mask, 'ds']).values
         future[col].fillna(df_prophet[col].iloc[-1], inplace=True)
 
     # Forecast
