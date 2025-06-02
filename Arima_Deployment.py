@@ -5,6 +5,11 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, m
 import numpy as np
 import streamlit as st
 st.write("statsmodels ARIMA imported successfully!")
+try:
+    from statsmodels.tsa.arima.model import ARIMA
+    st.success("ARIMA imported successfully!")
+except Exception as e:
+    st.error(f"Failed to import ARIMA: {e}")
 
 # Load data
 df = pd.read_csv("dfmonthly_modelling.csv", parse_dates=['date'], index_col='date')
