@@ -3,12 +3,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, mean_absolute_percentage_error
 import numpy as np
 import streamlit as st
-st.write("statsmodels ARIMA imported successfully!")
-try:
-    from statsmodels.tsa.arima.model import ARIMA
-    st.success("ARIMA imported successfully!")
-except Exception as e:
-    st.error(f"Failed to import ARIMA: {e}")
+from statsmodels.tsa.arima.model import ARIMA
 
 # Load data
 df = pd.read_csv("dfmonthly_modelling.csv", parse_dates=['Date'], index_col='Date')
