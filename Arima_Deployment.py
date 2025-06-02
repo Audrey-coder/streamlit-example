@@ -4,6 +4,7 @@ from statsmodels.tsa.arima.model import ARIMA
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, mean_absolute_percentage_error
 import numpy as np
 import streamlit as st
+st.write("statsmodels ARIMA imported successfully!")
 
 # Load data
 df = pd.read_csv("dfmonthly_modelling.csv", parse_dates=['date'], index_col='date')
