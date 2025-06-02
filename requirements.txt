@@ -7,4 +7,3 @@ statsmodels
 prophet
 xgboost
 seaborn
-tensorflow==2.12.0
