@@ -3,7 +3,7 @@ scikit-learn
 pandas
 matplotlib
 numpy
-statsmodels
+statsmodels==0.13.2
 prophet
 xgboost
 seaborn
