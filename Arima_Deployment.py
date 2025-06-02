@@ -1,6 +1,5 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from statsmodels.tsa.arima.model import ARIMA
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, mean_absolute_percentage_error
 import numpy as np
 import streamlit as st
