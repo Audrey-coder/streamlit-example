@@ -11,7 +11,7 @@ except Exception as e:
     st.error(f"Failed to import ARIMA: {e}")
 
 # Load data
-df = pd.read_csv("dfmonthly_modelling.csv", parse_dates=['date'], index_col='date')
+df = pd.read_csv("dfmonthly_modelling.csv", parse_dates=['Date'], index_col='Date')
 
 # Split data: last 20% for testing
 test_size = int(len(df) * 0.2)
