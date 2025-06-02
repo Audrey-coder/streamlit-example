@@ -6,5 +6,4 @@ numpy
 statsmodels
 prophet
 xgboost
-pmdarima
 seaborn
